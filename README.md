@@ -1,209 +1,82 @@
-# Hospital-Management-System
-A full-stack Hospital Management System built with Flask, PostgreSQL, HTML, CSS, and JavaScript to manage patients, doctors, appointments, rooms, billing, and hospital analytics.
-# MediCare — Hospital Management System
+# MediCare Hospital Management System
 
-A full-stack Hospital Management System developed as a **Database Management Systems (DBMS) mini project**. MediCare provides a simple web-based interface for managing hospital operations, including patient records, doctors, appointments, room availability, billing, and dashboard analytics.
+DBMS mini project - Healthcare domain.
 
-The project demonstrates how a frontend, Python backend, and relational database work together to manage hospital information efficiently.
+**Architecture:** HTML + CSS + JavaScript -> Python Flask (REST API) -> PostgreSQL -> managed with pgAdmin
 
 ## Features
+- **Patients** - register, search, full record (appointments + bills), admit / discharge to rooms
+- **Doctors & Departments** - add / delete, doctors linked to departments
+- **Appointments** - book, complete, cancel; a doctor can't be double-booked
+- **Doctor Schedule** - pick a doctor and (optionally) a date
+- **Rooms** - availability tracked automatically by a database trigger
+- **Billing** - bill = consultation fee + (room charge x days) + other charges, printable invoice, mark paid
+- **Dashboard** - counts, revenue, pending dues, today's appointments
 
-- **Dashboard:** View patient and doctor counts, today's appointments, available rooms, total revenue, and pending payments.
-- **Patient Management:** Register and search patients, view their records, manage admissions, and discharge patients.
-- **Doctor Management:** Add and manage doctors with their specializations and department details.
-- **Department Management:** Organize doctors according to hospital departments.
-- **Appointment Management:** Book, complete, and cancel appointments while preventing double-booking of doctors.
-- **Doctor Schedule:** View appointment schedules for individual doctors and dates.
-- **Room Management:** Track room availability and manage patient room allocation.
-- **Billing System:** Generate bills, calculate total charges, track payment status, and print invoices.
-- **Database Integrity:** Use constraints, relationships, indexes, views, and triggers to maintain consistent data.
-
-## Tech Stack
-
-| Component | Technology |
-|---|---|
-| Frontend | HTML, CSS, JavaScript |
-| Backend | Python, Flask REST API |
-| Database | PostgreSQL |
-| Database Management | pgAdmin |
-| Database Connectivity | psycopg2 |
-| Version Control | Git and GitHub |
-
-## Project Architecture
-
-The application follows a simple three-layer architecture:
-
-1. **Frontend:** HTML, CSS, and JavaScript provide the user interface.
-2. **Backend:** Python Flask processes requests and communicates with the database through API endpoints.
-3. **Database:** PostgreSQL stores and manages hospital records using relational tables, constraints, views, and triggers.
-
-**Flow:** Frontend → Flask REST API → PostgreSQL Database
-
-## Database Design
-
-The project uses six main tables:
-
-| Table | Purpose |
-|---|---|
-| `department` | Stores hospital department details |
-| `doctor` | Stores doctor information and department assignments |
-| `patient` | Stores patient information and admission details |
-| `appointment` | Stores patient appointments and their status |
-| `room` | Stores room types, charges, and availability |
-| `billing` | Stores billing details and payment status |
-
-Additional database objects include:
-
-- **Primary and foreign keys** to maintain relationships between tables.
-- **CHECK, UNIQUE, NOT NULL, and DEFAULT constraints** to validate data.
-- **Indexes** to support efficient queries and prevent doctors from being double-booked.
-- **View:** `doctor_schedule` combines appointment, doctor, and patient information.
-- **Trigger and PL/pgSQL function:** Automatically update room availability when patients are admitted, discharged, or moved.
-- **Generated column:** Calculates the total bill amount from the individual charges.
-
-The database design demonstrates relational database concepts and normalization up to Third Normal Form (3NF).
-
-## Project Structure
-
-```text
+## Project structure
+```
 hospital-management/
-├── app.py
-├── schema.sql
-├── queries.sql
-├── requirements.txt
-├── README.md
-└── static/
-    ├── index.html
-    ├── style.css
-    └── app.js
+|-- app.py              Flask backend (REST API)
+|-- schema.sql          Tables, view, trigger + sample data
+|-- queries.sql         Sample queries for demo / viva
+|-- requirements.txt
+`-- static/
+    |-- index.html
+    |-- style.css
+    `-- app.js
 ```
 
-- `app.py` — Flask backend and REST API endpoints.
-- `schema.sql` — Database tables, relationships, constraints, view, trigger, and sample data.
-- `queries.sql` — Example SQL queries for demonstrations and viva preparation.
-- `requirements.txt` — Python dependencies.
-- `static/index.html` — Application interface.
-- `static/style.css` — Frontend styling.
-- `static/app.js` — Frontend interactions and API communication.
+## Setup (step by step)
 
-## Installation and Setup
+### 1. Create the database in pgAdmin
+1. Open **pgAdmin** and connect to your server.
+2. Right-click **Databases -> Create -> Database...**, name it `hospital_db`, Save.
+3. Right-click `hospital_db` -> **Query Tool**.
+4. Click the folder icon, open `schema.sql`, press **F5** to run it.
+5. Refresh the database tree: **Schemas -> public -> Tables** should show 6 tables
+   (department, doctor, room, patient, appointment, billing) and the view `doctor_schedule`.
 
-### Prerequisites
+> Needs PostgreSQL 12 or newer. You can re-run `schema.sql` any time to reset the data.
 
-Install the following before running the application:
+### 2. Set your password
+Open `app.py` and edit `DB_CONFIG` (top of file) - at minimum the `password`
+you chose while installing PostgreSQL. Or set environment variables
+`DB_HOST`, `DB_PORT`, `DB_NAME`, `DB_USER`, `DB_PASSWORD`.
 
-- Python 3.10 or newer
-- PostgreSQL 12 or newer
-- pgAdmin
-- A modern web browser
-
-### Step 1: Clone the Repository
-
+### 3. Install and run
 ```bash
-git clone https://github.com/YOUR-USERNAME/YOUR-REPOSITORY.git
-cd YOUR-REPOSITORY
-```
-
-Replace the repository URL with your actual GitHub repository URL.
-
-### Step 2: Create the Database
-
-1. Open pgAdmin and connect to your PostgreSQL server.
-2. Right-click **Databases → Create → Database**.
-3. Name the database `hospital_db`.
-4. Open the Query Tool for `hospital_db`.
-5. Open `schema.sql` and execute the script.
-
-The script creates the required tables, view, trigger, and sample records.
-
-### Step 3: Configure Database Credentials
-
-The Flask application reads its database configuration from environment variables, with defaults defined in `app.py`.
-
-For Windows Command Prompt, set your actual PostgreSQL credentials:
-
-```bat
-set DB_HOST=localhost
-set DB_PORT=5432
-set DB_NAME=hospital_db
-set DB_USER=postgres
-set DB_PASSWORD=YOUR_POSTGRES_PASSWORD
-```
-
-Use your own PostgreSQL password. Do not commit real passwords or other credentials to GitHub.
-
-### Step 4: Create a Virtual Environment
-
-```bash
+cd hospital-management
 python -m venv venv
-```
-
-Activate it on Windows:
-
-```bat
-venv\Scripts\activate
-```
-
-### Step 5: Install Dependencies
-
-```bash
-python -m pip install -r requirements.txt
-```
-
-### Step 6: Run the Application
-
-```bash
+venv\Scripts\activate          # Windows   (Mac/Linux: source venv/bin/activate)
+pip install -r requirements.txt
 python app.py
 ```
+Open **http://127.0.0.1:5000** in your browser.
 
-Open the following address in your browser:
+## Database design (for your report)
+| Table | Primary key | Foreign keys |
+|---|---|---|
+| department | dept_id | - |
+| doctor | doctor_id | dept_id -> department |
+| room | room_id | - |
+| patient | patient_id | room_id -> room (only while admitted) |
+| appointment | appointment_id | patient_id -> patient, doctor_id -> doctor |
+| billing | bill_id | patient_id, appointment_id, room_id |
 
-**http://127.0.0.1:5000**
+Relationships: Department 1-N Doctor, Patient M-N Doctor (via Appointment), Room 1-N Patient (over time), Patient 1-N Billing.
 
-Ensure that PostgreSQL is running and the database has been initialized before launching the application.
+## DBMS concepts demonstrated
+- Primary keys, foreign keys, `ON DELETE` rules (CASCADE / RESTRICT / SET NULL)
+- Constraints: `NOT NULL`, `UNIQUE`, `CHECK`, `DEFAULT`
+- Partial unique index (prevents double-booking a doctor)
+- Generated column (`billing.total_amount`)
+- View (`doctor_schedule`)
+- Trigger + PL/pgSQL function (`sync_room_availability`)
+- Joins, GROUP BY / HAVING, subqueries (see `queries.sql`)
+- Normalization (3NF)
 
-## Sample SQL Queries
-
-The `queries.sql` file contains examples of important DBMS concepts, including:
-
-- JOIN operations
-- Aggregate functions and GROUP BY
-- HAVING clauses
-- Subqueries
-- Views
-- Room availability queries
-- Trigger demonstrations
-
-These queries can be executed in pgAdmin's Query Tool.
-
-## Learning Outcomes
-
-Through this project, we explored:
-
-- Designing a relational database for a real-world application.
-- Establishing relationships using primary and foreign keys.
-- Implementing CRUD operations through a Flask backend.
-- Connecting a web frontend to a PostgreSQL database.
-- Using SQL joins, aggregate functions, subqueries, and views.
-- Maintaining data consistency using constraints and triggers.
-- Building a dashboard to present useful operational information.
-
-## Future Enhancements
-
-- User authentication and role-based access for administrators, doctors, and receptionists.
-- Search filters and advanced reporting.
-- Appointment reminders and notifications.
-- Improved security and audit logging.
-- Deployment to a cloud hosting platform.
-
-## Disclaimer
-
-This project is intended for educational and demonstration purposes. The included sample records are illustrative and should not be used as real patient data.
-
-## Author
-
-**Shrushti Trivedi**
-
----
-
-*Developed as a DBMS mini project to demonstrate full-stack development and relational database management in the healthcare domain.*
+## Troubleshooting
+- **"Cannot connect to the database"** - PostgreSQL not running, or wrong password / db name in `DB_CONFIG`.
+- **`relation "patient" does not exist`** - `schema.sql` wasn't run on `hospital_db`.
+- **Port 5000 busy** - run with `set PORT=5001` (Windows) / `PORT=5001 python app.py`.
+- **`pip install psycopg2-binary` fails** - upgrade pip: `python -m pip install --upgrade pip`.

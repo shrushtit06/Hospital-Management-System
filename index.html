@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MediCare HMS — Hospital Management System</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <div class="brand-mark">✚</div>
+      <div><strong>MediCare</strong><span>Hospital Management</span></div>
+      <button class="collapse-btn" id="sidebar-toggle" title="Collapse sidebar">‹</button>
+    </div>
+
+    <div class="nav-label">Workspace</div>
+    <nav id="nav">
+      <button data-page="dashboard" class="active"><span class="nav-icon">⌂</span><span>Dashboard</span></button>
+      <button data-page="patients"><span class="nav-icon">♙</span><span>Patients</span></button>
+      <button data-page="doctors"><span class="nav-icon">✚</span><span>Doctors</span></button>
+      <button data-page="departments"><span class="nav-icon">▦</span><span>Departments</span></button>
+      <button data-page="appointments"><span class="nav-icon">◷</span><span>Appointments</span></button>
+      <button data-page="schedule"><span class="nav-icon">☷</span><span>Doctor Schedule</span></button>
+      <button data-page="rooms"><span class="nav-icon">▥</span><span>Rooms</span></button>
+      <button data-page="billing"><span class="nav-icon">₹</span><span>Billing</span></button>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="status-dot"></div>
+      <div><strong>System online</strong><span>PostgreSQL connected</span></div>
+    </div>
+  </aside>
+
+  <main id="content">
+    <div class="app-topbar">
+      <div>
+        <div class="eyebrow">MEDICARE HMS</div>
+        <div class="topbar-title">Hospital operations</div>
+      </div>
+      <div class="topbar-tools">
+        <button class="icon-btn" id="shortcut-btn" title="Keyboard shortcuts">⌘</button>
+        <div class="live-clock" id="live-clock">--:--</div>
+        <button class="profile-chip" title="Administrator">
+          <span class="avatar">A</span><span>Admin</span>
+        </button>
+      </div>
+    </div>
+    <section id="page-content"></section>
+  </main>
+
+  <dialog id="shortcut-modal">
+    <div class="modal-heading"><div><div class="eyebrow">SHORTCUTS</div><h3>Navigate faster</h3></div>
+      <button class="modal-close" onclick="this.closest('dialog').close()">×</button></div>
+    <div class="shortcut-list">
+      <div><kbd>Ctrl</kbd><kbd>K</kbd><span>Open navigation</span></div>
+      <div><kbd>Esc</kbd><span>Close dialog / command menu</span></div>
+      <div><kbd>1</kbd><span>Dashboard</span></div>
+      <div><kbd>2</kbd><span>Patients</span></div>
+      <div><kbd>3</kbd><span>Doctors</span></div>
+      <div><kbd>4</kbd><span>Appointments</span></div>
+      <div><kbd>5</kbd><span>Rooms</span></div>
+      <div><kbd>6</kbd><span>Billing</span></div>
+    </div>
+  </dialog>
+
+  <dialog id="command-modal">
+    <div class="modal-heading"><div><div class="eyebrow">QUICK NAVIGATION</div><h3>Where do you want to go?</h3></div>
+      <button class="modal-close" onclick="this.closest('dialog').close()">×</button></div>
+    <input id="command-search" class="command-search" placeholder="Search a section..." autocomplete="off">
+    <div id="command-list" class="command-list"></div>
+  </dialog>
+
+  <dialog id="modal">
+    <h3 id="modal-title"></h3>
+    <form id="modal-form"></form>
+  </dialog>
+
+  <dialog id="view" class="wide"></dialog>
+  <div id="toast"></div>
+  <script src="/static/app.js"></script>
+</body>
+</html>
